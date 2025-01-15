@@ -1,0 +1,44 @@
+server:
+  address: ${HOST_IP}
+  port: ${HOST_PORT}
+
+database:
+  host: "${DATABASE_HOST}"
+  user: "${DATABASE_USER}"
+  password: "${DATABASE_PASSWORD}"
+  database: "${DATABASE_NAME}"
+  scheme: "${DATABASE_SCHEME}"
+  port: "${DATABASE_PORT}"
+  connectionTimeoutMillis: 2000
+  max: 100
+
+logging:
+  level: ${LOGGING_LEVEL}
+
+setting:
+  accessKey: ${ACCESS_KEY}
+  provider: ${PROVIDER_ADDRESS}
+  agent: ${AGENT_PK}
+  network: ${NETWORK}
+  delaySecond: ${DELAY_SECOND}
+  whiteList:
+    - 127.0.0.1
+    - 168.63.37.145
+    - 20.54.96.37
+    - 13.70.194.104
+    - 34.146.139.91
+    - 34.54.234.115
+    - 34.54.248.253
+    - 34.64.93.62
+    - 34.47.93.43
+    - 34.84.180.208
+    - 48.209.163.104
+    - 4.207.193.125
+    - 48.209.162.122
+
+scheduler:
+  enable: true
+  items:
+    - name: postback
+      enable: true
+      expression: "*/1 * * * * *"

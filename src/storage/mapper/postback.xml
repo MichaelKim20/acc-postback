@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="postback">
+
+    <insert id="postItem">
+        INSERT INTO items
+        (
+            "postback_id"   ,
+            "event_name"    ,
+            "user_id"       ,
+            "payout"        ,
+            "status"        ,
+            "timestamp"
+        )
+        VALUES
+            (
+                #{postback_id}  ,
+                #{event_name}   ,
+                #{user_id}      ,
+                ${payout}       ,
+                #{status}       ,
+                now()
+            )
+    </insert>
+
+    <select id="getItemOnPending">
+        SELECT
+            *
+        FROM
+            items
+        WHERE (
+            "status" = 'pending'
+        )
+        ORDER BY sequence ASC
+        LIMIT ${limit};
+    </select>
+
+    <select id="getItemOnStarted">
+        SELECT
+            *
+        FROM
+            items
+        WHERE
+            "status" = 'started' AND
+            EXTRACT(EPOCH FROM( now() - "timestamp") ) > ${delay}
+        ORDER BY sequence ASC
+            LIMIT ${limit};
+    </select>
+
+    <update id="updateItem">
+        UPDATE items
+        SET
+            "status" = #{status}
+        WHERE
+            "sequence" = #{sequence}
+    </update>
+
+    <update id="updateItemTxHash">
+        UPDATE items
+        SET
+            "tx_hash" = #{tx_hash}
+        WHERE
+            "sequence" = #{sequence}
+    </update>
+
+    <delete id="removeItem">
+        DELETE
+        FROM
+            items
+        WHERE
+            "sequence" = #{sequence}
+    </delete>
+</mapper>
