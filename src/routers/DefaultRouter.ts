@@ -64,7 +64,8 @@ export class DefaultRouter {
     }
 
     private async handler(req: express.Request, res: express.Response) {
-        const ip = req.connection.remoteAddress || "";
+        let ip = req.get("X-Forwarded-For");
+        if (ip === undefined) ip = req.connection.remoteAddress || "";
         if (!this._config.setting.whiteList.includes(ip)) {
             return res.status(400).json(
                 this.makeResponseData(400, undefined, {
@@ -73,7 +74,7 @@ export class DefaultRouter {
             );
         }
 
-        logger.http(`GET /postback-handler ${req.ip}:${JSON.stringify(req.query)}`);
+        logger.http(`GET /handler ${ip}:${JSON.stringify(req.query)}`);
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

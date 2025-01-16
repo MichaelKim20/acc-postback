@@ -23,6 +23,7 @@ setting:
   delaySecond: ${DELAY_SECOND}
   whiteList:
     - 127.0.0.1
+    - 221.147.70.56
     - 168.63.37.145
     - 20.54.96.37
     - 13.70.194.104
