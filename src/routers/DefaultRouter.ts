@@ -43,6 +43,7 @@ export class DefaultRouter {
                 query("event_name").exists(),
                 query("user_id").exists().trim().isEthereumAddress(),
                 query("payout").exists(),
+                query("user_payout").exists(),
             ],
             this.handler.bind(this)
         );
@@ -91,8 +92,11 @@ export class DefaultRouter {
             const event_name: string = String(req.query.event_name).trim();
             const user_id: string = String(req.query.user_id).trim();
             const payout: number = Number(req.query.payout);
-            await this._storage.saveItem(postback_id, event_name, user_id, payout);
-            return res.status(200).json(this.makeResponseData(200, { postback_id, event_name, user_id, payout }, null));
+            const user_payout: number = Number(req.query.user_payout);
+            await this._storage.saveItem(postback_id, event_name, user_id, payout, user_payout);
+            return res
+                .status(200)
+                .json(this.makeResponseData(200, { postback_id, event_name, user_id, payout, user_payout }, null));
         } catch (error: any) {
             logger.error(`GET /handler : ${error.message}`);
             this._metrics.add("failure", 1);

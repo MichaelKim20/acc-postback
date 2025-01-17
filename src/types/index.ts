@@ -3,6 +3,7 @@ export interface IPostBackData {
     event_name: string;
     user_id: string;
     payout: number;
+    user_payout: number;
     status: string;
     tx_hash: string;
 }

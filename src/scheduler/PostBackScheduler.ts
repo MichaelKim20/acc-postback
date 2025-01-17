@@ -74,9 +74,13 @@ export class PostBackScheduler extends Scheduler {
     private async onWatch() {
         const list = await this.storage.getItemsOnStarted(2, this.config.setting.delaySecond);
         for (const item of list) {
-            if (item.payout > 0) {
-                const amount = await this.client.convert(BOACoin.make(item.payout).value, "usd", "point");
-                logger.info(`Send: user_id: ${item.user_id}, point: ${new BOACoin(amount).toBOAString()}`);
+            if (item.user_payout > 0) {
+                const amount = await this.client.convert(BOACoin.make(item.user_payout).value, "usd", "point");
+                logger.info(
+                    `Send: user_id: ${item.user_id}, point: ${new BOACoin(amount).toBOAString()}, user_payout: ${
+                        item.user_payout
+                    }, payout: ${item.payout}`
+                );
                 item.tx_hash = await this.client.provideToAddress(this.config.setting.provider, item.user_id, amount);
                 await this.storage.updateItemTxHash(item);
                 item.status = ProvisionStatus.Sent;

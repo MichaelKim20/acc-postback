@@ -34,13 +34,20 @@ export class PostBackStorage extends Storage {
         await this.queryForMapper("table", "drop_table", {});
     }
 
-    public async saveItem(postback_id: string, event_name: string, user_id: string, payout: number) {
+    public async saveItem(
+        postback_id: string,
+        event_name: string,
+        user_id: string,
+        payout: number,
+        user_payout: number
+    ) {
         try {
             const data: IPostBackData = {
                 postback_id,
                 event_name,
                 user_id,
                 payout,
+                user_payout,
                 status: ProvisionStatus.Started,
                 tx_hash: "",
             };
@@ -57,6 +64,7 @@ export class PostBackStorage extends Storage {
                 event_name: data.event_name,
                 user_id: data.user_id,
                 payout: data.payout,
+                user_payout: data.user_payout,
                 status: data.status,
             })
                 .then(() => {
@@ -81,6 +89,7 @@ export class PostBackStorage extends Storage {
                                 event_name: m.event_name,
                                 user_id: m.user_id,
                                 payout: m.payout,
+                                user_payout: m.user_payout,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };
@@ -106,6 +115,7 @@ export class PostBackStorage extends Storage {
                                 event_name: m.event_name,
                                 user_id: m.user_id,
                                 payout: m.payout,
+                                user_payout: m.user_payout,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };

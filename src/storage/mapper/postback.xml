@@ -9,6 +9,7 @@
             "event_name"    ,
             "user_id"       ,
             "payout"        ,
+            "user_payout"        ,
             "status"        ,
             "timestamp"
         )
@@ -18,6 +19,7 @@
                 #{event_name}   ,
                 #{user_id}      ,
                 ${payout}       ,
+                ${user_payout}       ,
                 #{status}       ,
                 now()
             )
