@@ -22,6 +22,7 @@ setting:
   network: ${NETWORK}
   delaySecond: ${DELAY_SECOND}
   whiteList: ${WHITE_LIST}
+  rpcEndpoint: ${RPC_ENDPOINT}
 
 provision:
   items:

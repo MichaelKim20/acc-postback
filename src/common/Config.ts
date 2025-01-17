@@ -232,6 +232,7 @@ export class Setting implements ISetting {
     public network: string;
     public delaySecond: number;
     public whiteList: string[];
+    public rpcEndpoint: string;
 
     constructor() {
         const defaults = Setting.defaultValue();
@@ -241,6 +242,7 @@ export class Setting implements ISetting {
         this.network = defaults.network;
         this.delaySecond = defaults.delaySecond;
         this.whiteList = defaults.whiteList;
+        this.rpcEndpoint = defaults.rpcEndpoint;
     }
 
     public readFromObject(config: ISetting) {
@@ -250,6 +252,7 @@ export class Setting implements ISetting {
         if (config.network !== undefined) this.network = config.network;
         if (config.delaySecond !== undefined) this.delaySecond = Number(config.delaySecond);
         if (config.whiteList !== undefined) this.whiteList = config.whiteList;
+        if (config.rpcEndpoint !== undefined) this.rpcEndpoint = config.rpcEndpoint;
     }
 
     public static defaultValue(): ISetting {
@@ -260,6 +263,7 @@ export class Setting implements ISetting {
             network: "testnet",
             delaySecond: 0,
             whiteList: [],
+            rpcEndpoint: "",
         } as unknown as ISetting;
     }
 }
@@ -336,6 +340,7 @@ export interface ISetting {
     network: string;
     delaySecond: number;
     whiteList: string[];
+    rpcEndpoint: string;
 }
 
 export interface IProvisionConfig {

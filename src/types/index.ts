@@ -15,6 +15,7 @@ export interface IProcessedPostBackData extends IPostBackData {
 
 export enum ProvisionStatus {
     Started = "started",
+    Pending = "pending",
     Sent = "sent",
     Pass = "pass",
     Failed = "failed",

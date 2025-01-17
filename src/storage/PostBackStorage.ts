@@ -154,6 +154,7 @@ export class PostBackStorage extends Storage {
         return new Promise<void>(async (resolve, reject) => {
             this.queryForMapper("postback", "updateItemTxHash", {
                 sequence: data.sequence,
+                status: data.status,
                 tx_hash: data.tx_hash,
             })
                 .then(() => {

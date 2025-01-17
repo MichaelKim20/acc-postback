@@ -62,6 +62,7 @@
     <update id="updateItemTxHash">
         UPDATE items
         SET
+            "status" = #{status},
             "tx_hash" = #{tx_hash}
         WHERE
             "sequence" = #{sequence}
