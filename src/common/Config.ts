@@ -15,6 +15,7 @@ export class Config implements IConfig {
     public logging: LoggingConfig;
     public scheduler: SchedulerConfig;
     public setting: Setting;
+    public provision: ProvisionConfig;
 
     constructor() {
         this.server = new ServerConfig();
@@ -22,6 +23,7 @@ export class Config implements IConfig {
         this.logging = new LoggingConfig();
         this.scheduler = new SchedulerConfig();
         this.setting = new Setting();
+        this.provision = new ProvisionConfig();
     }
 
     public static createWithArgument(): Config {
@@ -59,6 +61,7 @@ export class Config implements IConfig {
         this.logging.readFromObject(cfg.logging);
         this.scheduler.readFromObject(cfg.scheduler);
         this.setting.readFromObject(cfg.setting);
+        this.provision.readFromObject(cfg.provision);
     }
 }
 
@@ -261,6 +264,31 @@ export class Setting implements ISetting {
     }
 }
 
+export class ProvisionConfig implements IProvisionConfig {
+    public items: IProvisionItem[];
+
+    constructor() {
+        const defaults = ProvisionConfig.defaultValue();
+        this.items = defaults.items;
+    }
+
+    public static defaultValue(): IProvisionConfig {
+        return {
+            items: [],
+        } as unknown as IProvisionConfig;
+    }
+
+    public readFromObject(config: IProvisionConfig) {
+        this.items = [];
+        if (config === undefined) return;
+        if (config.items !== undefined) this.items = config.items;
+    }
+
+    public getProvision(publisher: string): IProvisionItem | undefined {
+        return this.items.find((m) => m.publisher === publisher);
+    }
+}
+
 export interface IServerConfig {
     address: string;
     port: number;
@@ -308,4 +336,14 @@ export interface ISetting {
     network: string;
     delaySecond: number;
     whiteList: string[];
+}
+
+export interface IProvisionConfig {
+    items: IProvisionItem[];
+    getProvision(publisher: string): IProvisionItem | undefined;
+}
+
+export interface IProvisionItem {
+    publisher: string;
+    provider: string;
 }

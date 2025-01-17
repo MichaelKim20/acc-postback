@@ -75,16 +75,19 @@ export class PostBackScheduler extends Scheduler {
         const list = await this.storage.getItemsOnStarted(2, this.config.setting.delaySecond);
         for (const item of list) {
             if (item.user_payout > 0) {
-                const amount = await this.client.convert(BOACoin.make(item.user_payout).value, "usd", "point");
-                logger.info(
-                    `Send: user_id: ${item.user_id}, point: ${new BOACoin(amount).toBOAString()}, user_payout: ${
-                        item.user_payout
-                    }, payout: ${item.payout}`
-                );
-                item.tx_hash = await this.client.provideToAddress(this.config.setting.provider, item.user_id, amount);
-                await this.storage.updateItemTxHash(item);
-                item.status = ProvisionStatus.Sent;
-                await this.storage.updateItem(item);
+                const provisionItem = this.config.provision.getProvision(item.publisher);
+                if (provisionItem !== undefined) {
+                    const amount = await this.client.convert(BOACoin.make(item.user_payout).value, "usd", "point");
+                    logger.info(
+                        `Send: user_id: ${item.user_id}, point: ${new BOACoin(amount).toBOAString()}, user_payout: ${
+                            item.user_payout
+                        }, payout: ${item.payout}, publisher: ${item.publisher}`
+                    );
+                    item.tx_hash = await this.client.provideToAddress(provisionItem.provider, item.user_id, amount);
+                    await this.storage.updateItemTxHash(item);
+                    item.status = ProvisionStatus.Sent;
+                    await this.storage.updateItem(item);
+                }
             } else {
                 item.status = ProvisionStatus.Pass;
                 await this.storage.updateItem(item);

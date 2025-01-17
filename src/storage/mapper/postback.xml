@@ -9,7 +9,8 @@
             "event_name"    ,
             "user_id"       ,
             "payout"        ,
-            "user_payout"        ,
+            "user_payout"   ,
+            "publisher"     ,
             "status"        ,
             "timestamp"
         )
@@ -19,7 +20,8 @@
                 #{event_name}   ,
                 #{user_id}      ,
                 ${payout}       ,
-                ${user_payout}       ,
+                ${user_payout}  ,
+                #{publisher}    ,
                 #{status}       ,
                 now()
             )

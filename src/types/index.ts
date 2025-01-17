@@ -4,6 +4,7 @@ export interface IPostBackData {
     user_id: string;
     payout: number;
     user_payout: number;
+    publisher: string;
     status: string;
     tx_hash: string;
 }

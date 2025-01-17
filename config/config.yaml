@@ -23,6 +23,11 @@ setting:
   delaySecond: ${DELAY_SECOND}
   whiteList: ${WHITE_LIST}
 
+provision:
+  items:
+    - publisher: ACCSoft
+      provider: ${PROVIDER_ADDRESS}
+
 scheduler:
   enable: true
   items:

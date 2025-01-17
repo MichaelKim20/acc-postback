@@ -10,6 +10,7 @@
             "user_id" VARCHAR(64) NOT NULL,
             "payout" NUMERIC(10,4) NOT NULL,
             "user_payout" NUMERIC(10,4) NOT NULL,
+            "publisher" VARCHAR(64) NOT NULL,
             "status" VARCHAR(12) NOT NULL,
             "timestamp" TIMESTAMP,
             "tx_hash" VARCHAR(66) DEFAULT '',

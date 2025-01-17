@@ -39,7 +39,8 @@ export class PostBackStorage extends Storage {
         event_name: string,
         user_id: string,
         payout: number,
-        user_payout: number
+        user_payout: number,
+        publisher: string
     ) {
         try {
             const data: IPostBackData = {
@@ -48,6 +49,7 @@ export class PostBackStorage extends Storage {
                 user_id,
                 payout,
                 user_payout,
+                publisher,
                 status: ProvisionStatus.Started,
                 tx_hash: "",
             };
@@ -65,6 +67,7 @@ export class PostBackStorage extends Storage {
                 user_id: data.user_id,
                 payout: data.payout,
                 user_payout: data.user_payout,
+                publisher: data.publisher,
                 status: data.status,
             })
                 .then(() => {
@@ -90,6 +93,7 @@ export class PostBackStorage extends Storage {
                                 user_id: m.user_id,
                                 payout: m.payout,
                                 user_payout: m.user_payout,
+                                publisher: m.publisher,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };
@@ -116,6 +120,7 @@ export class PostBackStorage extends Storage {
                                 user_id: m.user_id,
                                 payout: m.payout,
                                 user_payout: m.user_payout,
+                                publisher: m.publisher,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };
