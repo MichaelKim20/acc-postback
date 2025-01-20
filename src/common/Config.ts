@@ -234,6 +234,7 @@ export class Setting implements ISetting {
     public whiteList: string[];
     public rpcEndpoint: string;
     public serverIndex: number;
+    public inquiryLimit: number;
 
     constructor() {
         const defaults = Setting.defaultValue();
@@ -245,6 +246,7 @@ export class Setting implements ISetting {
         this.whiteList = defaults.whiteList;
         this.rpcEndpoint = defaults.rpcEndpoint;
         this.serverIndex = defaults.serverIndex;
+        this.inquiryLimit = defaults.inquiryLimit;
     }
 
     public readFromObject(config: ISetting) {
@@ -256,6 +258,7 @@ export class Setting implements ISetting {
         if (config.whiteList !== undefined) this.whiteList = config.whiteList;
         if (config.rpcEndpoint !== undefined) this.rpcEndpoint = config.rpcEndpoint;
         if (config.serverIndex !== undefined) this.serverIndex = Number(config.serverIndex);
+        if (config.inquiryLimit !== undefined) this.inquiryLimit = Number(config.inquiryLimit);
     }
 
     public static defaultValue(): ISetting {
@@ -268,6 +271,7 @@ export class Setting implements ISetting {
             whiteList: [],
             rpcEndpoint: "",
             serverIndex: 0,
+            inquiryLimit: 10,
         } as unknown as ISetting;
     }
 }
@@ -346,6 +350,7 @@ export interface ISetting {
     whiteList: string[];
     rpcEndpoint: string;
     serverIndex: number;
+    inquiryLimit: number;
 }
 
 export interface IProvisionConfig {

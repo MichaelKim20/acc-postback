@@ -83,7 +83,7 @@ export class PostBackScheduler extends Scheduler {
     private async onSend() {
         const list = await this.storage.getItemsOnStarted(
             this.config.setting.serverIndex,
-            2,
+            this.config.setting.inquiryLimit,
             this.config.setting.delaySecond
         );
         for (const item of list) {

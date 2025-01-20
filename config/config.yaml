@@ -24,6 +24,7 @@ setting:
   whiteList: ${WHITE_LIST}
   rpcEndpoint: ${RPC_ENDPOINT}
   serverIndex: ${SERVER_INDEX}
+  inquiryLimit: ${INQUIRY_LIMIT}
 
 provision:
   items:
