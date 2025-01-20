@@ -44,6 +44,7 @@ export class DefaultRouter {
                 query("user_id").exists().trim().isEthereumAddress(),
                 query("payout").exists(),
                 query("user_payout").exists(),
+                query("user_payout_in_vc").exists(),
                 query("publisher").exists(),
             ],
             this.handler.bind(this)
@@ -94,8 +95,19 @@ export class DefaultRouter {
             const user_id: string = String(req.query.user_id).trim();
             const payout: number = Number(req.query.payout);
             const user_payout: number = Number(req.query.user_payout);
+            const user_payout_in_vc: number = Number(req.query.user_payout_in_vc);
             const publisher: string = String(req.query.publisher).trim();
-            await this._storage.saveItem(postback_id, event_name, user_id, payout, user_payout, publisher);
+            const serverIndex: number = this._config.setting.serverIndex;
+            await this._storage.saveItem(
+                postback_id,
+                event_name,
+                user_id,
+                payout,
+                user_payout,
+                user_payout_in_vc,
+                publisher,
+                serverIndex
+            );
             return res
                 .status(200)
                 .json(this.makeResponseData(200, { postback_id, event_name, user_id, payout, user_payout }, null));

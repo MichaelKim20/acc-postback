@@ -40,7 +40,9 @@ export class PostBackStorage extends Storage {
         user_id: string,
         payout: number,
         user_payout: number,
-        publisher: string
+        user_payout_in_vc: number,
+        publisher: string,
+        server_index: number
     ) {
         try {
             const data: IPostBackData = {
@@ -49,7 +51,9 @@ export class PostBackStorage extends Storage {
                 user_id,
                 payout,
                 user_payout,
+                user_payout_in_vc,
                 publisher,
+                server_index,
                 status: ProvisionStatus.Started,
                 tx_hash: "",
             };
@@ -67,7 +71,9 @@ export class PostBackStorage extends Storage {
                 user_id: data.user_id,
                 payout: data.payout,
                 user_payout: data.user_payout,
+                user_payout_in_vc: data.user_payout_in_vc,
                 publisher: data.publisher,
+                server_index: data.server_index,
                 status: data.status,
             })
                 .then(() => {
@@ -80,9 +86,9 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public getItemsOnPending(limit: number): Promise<IProcessedPostBackData[]> {
+    public getItemsOnPending(server_index: number, limit: number): Promise<IProcessedPostBackData[]> {
         return new Promise<IProcessedPostBackData[]>(async (resolve, reject) => {
-            this.queryForMapper("postback", "getItemOnPending", { limit })
+            this.queryForMapper("postback", "getItemOnPending", { server_index, limit })
                 .then((result) => {
                     return resolve(
                         result.rows.map((m) => {
@@ -93,7 +99,9 @@ export class PostBackStorage extends Storage {
                                 user_id: m.user_id,
                                 payout: m.payout,
                                 user_payout: m.user_payout,
+                                user_payout_in_vc: m.user_payout_in_vc,
                                 publisher: m.publisher,
+                                server_index: m.server_index,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };
@@ -107,9 +115,9 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public getItemsOnStarted(limit: number, delay: number): Promise<IProcessedPostBackData[]> {
+    public getItemsOnStarted(server_index: number, limit: number, delay: number): Promise<IProcessedPostBackData[]> {
         return new Promise<IProcessedPostBackData[]>(async (resolve, reject) => {
-            this.queryForMapper("postback", "getItemOnStarted", { limit, delay })
+            this.queryForMapper("postback", "getItemOnStarted", { server_index, limit, delay })
                 .then((result) => {
                     return resolve(
                         result.rows.map((m) => {
@@ -120,7 +128,9 @@ export class PostBackStorage extends Storage {
                                 user_id: m.user_id,
                                 payout: m.payout,
                                 user_payout: m.user_payout,
+                                user_payout_in_vc: m.user_payout_in_vc,
                                 publisher: m.publisher,
+                                server_index: m.server_index,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };
@@ -154,6 +164,7 @@ export class PostBackStorage extends Storage {
         return new Promise<void>(async (resolve, reject) => {
             this.queryForMapper("postback", "updateItemTxHash", {
                 sequence: data.sequence,
+                status: data.status,
                 tx_hash: data.tx_hash,
             })
                 .then(() => {

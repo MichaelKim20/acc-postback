@@ -10,21 +10,25 @@
             "user_id"       ,
             "payout"        ,
             "user_payout"   ,
+            "user_payout_in_vc" ,
             "publisher"     ,
+            "server_index"   ,
             "status"        ,
             "timestamp"
         )
         VALUES
-            (
-                #{postback_id}  ,
-                #{event_name}   ,
-                #{user_id}      ,
-                ${payout}       ,
-                ${user_payout}  ,
-                #{publisher}    ,
-                #{status}       ,
-                now()
-            )
+        (
+            #{postback_id}  ,
+            #{event_name}   ,
+            #{user_id}      ,
+            ${payout}       ,
+            ${user_payout}  ,
+            ${user_payout_in_vc}  ,
+            #{publisher}    ,
+            ${server_index}  ,
+            #{status}       ,
+            now()
+        )
     </insert>
 
     <select id="getItemOnPending">
@@ -32,9 +36,9 @@
             *
         FROM
             items
-        WHERE (
-            "status" = 'pending'
-        )
+        WHERE
+            "status" = 'pending' AND
+            "server_index" = ${server_index}
         ORDER BY sequence ASC
         LIMIT ${limit};
     </select>
@@ -46,7 +50,8 @@
             items
         WHERE
             "status" = 'started' AND
-            EXTRACT(EPOCH FROM( now() - "timestamp") ) > ${delay}
+            EXTRACT(EPOCH FROM( now() - "timestamp") ) > ${delay} AND
+            "server_index" = ${server_index}
         ORDER BY sequence ASC
             LIMIT ${limit};
     </select>
@@ -62,6 +67,7 @@
     <update id="updateItemTxHash">
         UPDATE items
         SET
+            "status" = #{status},
             "tx_hash" = #{tx_hash}
         WHERE
             "sequence" = #{sequence}
