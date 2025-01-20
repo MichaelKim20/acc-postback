@@ -233,7 +233,6 @@ export class Setting implements ISetting {
     public delaySecond: number;
     public whiteList: string[];
     public rpcEndpoint: string;
-    public serverIndex: number;
     public inquiryLimit: number;
 
     constructor() {
@@ -245,7 +244,6 @@ export class Setting implements ISetting {
         this.delaySecond = defaults.delaySecond;
         this.whiteList = defaults.whiteList;
         this.rpcEndpoint = defaults.rpcEndpoint;
-        this.serverIndex = defaults.serverIndex;
         this.inquiryLimit = defaults.inquiryLimit;
     }
 
@@ -257,7 +255,6 @@ export class Setting implements ISetting {
         if (config.delaySecond !== undefined) this.delaySecond = Number(config.delaySecond);
         if (config.whiteList !== undefined) this.whiteList = config.whiteList;
         if (config.rpcEndpoint !== undefined) this.rpcEndpoint = config.rpcEndpoint;
-        if (config.serverIndex !== undefined) this.serverIndex = Number(config.serverIndex);
         if (config.inquiryLimit !== undefined) this.inquiryLimit = Number(config.inquiryLimit);
     }
 
@@ -270,7 +267,6 @@ export class Setting implements ISetting {
             delaySecond: 0,
             whiteList: [],
             rpcEndpoint: "",
-            serverIndex: 0,
             inquiryLimit: 10,
         } as unknown as ISetting;
     }
@@ -349,7 +345,6 @@ export interface ISetting {
     delaySecond: number;
     whiteList: string[];
     rpcEndpoint: string;
-    serverIndex: number;
     inquiryLimit: number;
 }
 

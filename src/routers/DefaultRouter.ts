@@ -97,7 +97,6 @@ export class DefaultRouter {
             const user_payout: number = Number(req.query.user_payout);
             const user_payout_in_vc: number = Number(req.query.user_payout_in_vc);
             const publisher: string = String(req.query.publisher).trim();
-            const serverIndex: number = this._config.setting.serverIndex;
             await this._storage.saveItem(
                 postback_id,
                 event_name,
@@ -105,8 +104,7 @@ export class DefaultRouter {
                 payout,
                 user_payout,
                 user_payout_in_vc,
-                publisher,
-                serverIndex
+                publisher
             );
             return res
                 .status(200)

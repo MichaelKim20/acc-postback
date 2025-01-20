@@ -41,8 +41,7 @@ export class PostBackStorage extends Storage {
         payout: number,
         user_payout: number,
         user_payout_in_vc: number,
-        publisher: string,
-        server_index: number
+        publisher: string
     ) {
         try {
             const data: IPostBackData = {
@@ -53,7 +52,6 @@ export class PostBackStorage extends Storage {
                 user_payout,
                 user_payout_in_vc,
                 publisher,
-                server_index,
                 status: ProvisionStatus.Started,
                 tx_hash: "",
             };
@@ -73,7 +71,6 @@ export class PostBackStorage extends Storage {
                 user_payout: data.user_payout,
                 user_payout_in_vc: data.user_payout_in_vc,
                 publisher: data.publisher,
-                server_index: data.server_index,
                 status: data.status,
             })
                 .then(() => {
@@ -86,9 +83,9 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public getItemsOnPending(server_index: number, limit: number): Promise<IProcessedPostBackData[]> {
+    public getItemsOnPending(limit: number): Promise<IProcessedPostBackData[]> {
         return new Promise<IProcessedPostBackData[]>(async (resolve, reject) => {
-            this.queryForMapper("postback", "getItemOnPending", { server_index, limit })
+            this.queryForMapper("postback", "getItemOnPending", { limit })
                 .then((result) => {
                     return resolve(
                         result.rows.map((m) => {
@@ -101,7 +98,6 @@ export class PostBackStorage extends Storage {
                                 user_payout: m.user_payout,
                                 user_payout_in_vc: m.user_payout_in_vc,
                                 publisher: m.publisher,
-                                server_index: m.server_index,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };
@@ -115,9 +111,9 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public getItemsOnStarted(server_index: number, limit: number, delay: number): Promise<IProcessedPostBackData[]> {
+    public getItemsOnStarted(limit: number, delay: number): Promise<IProcessedPostBackData[]> {
         return new Promise<IProcessedPostBackData[]>(async (resolve, reject) => {
-            this.queryForMapper("postback", "getItemOnStarted", { server_index, limit, delay })
+            this.queryForMapper("postback", "getItemOnStarted", { limit, delay })
                 .then((result) => {
                     return resolve(
                         result.rows.map((m) => {
@@ -130,7 +126,6 @@ export class PostBackStorage extends Storage {
                                 user_payout: m.user_payout,
                                 user_payout_in_vc: m.user_payout_in_vc,
                                 publisher: m.publisher,
-                                server_index: m.server_index,
                                 status: m.status,
                                 tx_hash: m.tx_hash,
                             };

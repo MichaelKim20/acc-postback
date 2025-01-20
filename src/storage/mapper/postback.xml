@@ -12,7 +12,6 @@
             "user_payout"   ,
             "user_payout_in_vc" ,
             "publisher"     ,
-            "server_index"   ,
             "status"        ,
             "timestamp"
         )
@@ -25,7 +24,6 @@
             ${user_payout}  ,
             ${user_payout_in_vc}  ,
             #{publisher}    ,
-            ${server_index}  ,
             #{status}       ,
             now()
         )
@@ -37,8 +35,7 @@
         FROM
             items
         WHERE
-            "status" = 'pending' AND
-            "server_index" = ${server_index}
+            "status" = 'pending'
         ORDER BY sequence ASC
         LIMIT ${limit};
     </select>
@@ -50,8 +47,7 @@
             items
         WHERE
             "status" = 'started' AND
-            EXTRACT(EPOCH FROM( now() - "timestamp") ) > ${delay} AND
-            "server_index" = ${server_index}
+            EXTRACT(EPOCH FROM( now() - "timestamp") ) > ${delay}
         ORDER BY sequence ASC
             LIMIT ${limit};
     </select>
