@@ -2,6 +2,7 @@ export interface IPostBackData {
     postback_id: string;
     event_name: string;
     user_id: string;
+    user_id_type: number;
     payout: number;
     user_payout: number;
     user_payout_in_vc: number;

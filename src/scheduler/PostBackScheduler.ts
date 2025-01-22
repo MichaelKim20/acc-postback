@@ -99,7 +99,19 @@ export class PostBackScheduler extends Scheduler {
                             }, payout: ${item.payout}, publisher: ${item.publisher}`
                         );
 
-                        item.tx_hash = await this.client.provideToAddress(provisionItem.provider, item.user_id, amount);
+                        if (item.user_id_type === 0) {
+                            item.tx_hash = await this.client.provideToAddress(
+                                provisionItem.provider,
+                                item.user_id,
+                                amount
+                            );
+                        } else {
+                            item.tx_hash = await this.client.provideToPhone(
+                                provisionItem.provider,
+                                item.user_id,
+                                amount
+                            );
+                        }
                         await this.provider.waitForTransaction(item.tx_hash, undefined, 1_000);
                         item.status = ProvisionStatus.Sent;
                         await this.storage.updateItemTxHash(item);
