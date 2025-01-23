@@ -11,10 +11,6 @@ export interface IPostBackData {
     tx_hash: string;
 }
 
-export interface IProcessedPostBackData extends IPostBackData {
-    sequence: string;
-}
-
 export enum ProvisionStatus {
     Started = "started",
     Sent = "sent",

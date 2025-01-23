@@ -5,30 +5,31 @@
     <insert id="postItem">
         INSERT INTO items
         (
-            "postback_id"   ,
-            "event_name"    ,
-            "user_id"       ,
-            "user_id_type"  ,
-            "payout"        ,
-            "user_payout"   ,
+            "postback_id"       ,
+            "event_name"        ,
+            "user_id"           ,
+            "user_id_type"      ,
+            "payout"            ,
+            "user_payout"       ,
             "user_payout_in_vc" ,
-            "publisher"     ,
-            "status"        ,
+            "publisher"         ,
+            "status"            ,
             "timestamp"
         )
         VALUES
         (
-            #{postback_id}  ,
-            #{event_name}   ,
-            #{user_id}      ,
-            ${user_id_type} ,
-            ${payout}       ,
-            ${user_payout}  ,
-            ${user_payout_in_vc}  ,
-            #{publisher}    ,
-            #{status}       ,
+            #{postback_id}          ,
+            #{event_name}           ,
+            #{user_id}              ,
+            ${user_id_type}         ,
+            ${payout}               ,
+            ${user_payout}          ,
+            ${user_payout_in_vc}    ,
+            #{publisher}            ,
+            #{status}               ,
             now()
         )
+        ON CONFLICT ("postback_id") DO NOTHING;
     </insert>
 
     <select id="getItemOnPending">
@@ -38,7 +39,7 @@
             items
         WHERE
             "status" = 'pending'
-        ORDER BY sequence ASC
+        ORDER BY postback_id ASC
         LIMIT ${limit};
     </select>
 
@@ -50,7 +51,7 @@
         WHERE
             "status" = 'started' AND
             EXTRACT(EPOCH FROM( now() - "timestamp") ) > ${delay}
-        ORDER BY sequence ASC
+        ORDER BY postback_id ASC
             LIMIT ${limit};
     </select>
 
@@ -59,7 +60,7 @@
         SET
             "status" = #{status}
         WHERE
-            "sequence" = #{sequence}
+            "postback_id" = #{postback_id}
     </update>
 
     <update id="updateItemTxHash">
@@ -68,7 +69,7 @@
             "status" = #{status},
             "tx_hash" = #{tx_hash}
         WHERE
-            "sequence" = #{sequence}
+            "postback_id" = #{postback_id}
     </update>
 
     <delete id="removeItem">
@@ -76,6 +77,6 @@
         FROM
             items
         WHERE
-            "sequence" = #{sequence}
+            "postback_id" = #{postback_id}
     </delete>
 </mapper>

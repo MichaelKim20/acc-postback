@@ -1,5 +1,5 @@
 import { IDatabaseConfig } from "../common/Config";
-import { IPostBackData, IProcessedPostBackData, ProvisionStatus } from "../types";
+import { IPostBackData, ProvisionStatus } from "../types";
 import { Utils } from "../utils/Utils";
 import { Storage } from "./Storage";
 
@@ -86,14 +86,13 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public getItemsOnPending(limit: number): Promise<IProcessedPostBackData[]> {
-        return new Promise<IProcessedPostBackData[]>(async (resolve, reject) => {
+    public getItemsOnPending(limit: number): Promise<IPostBackData[]> {
+        return new Promise<IPostBackData[]>(async (resolve, reject) => {
             this.queryForMapper("postback", "getItemOnPending", { limit })
                 .then((result) => {
                     return resolve(
                         result.rows.map((m) => {
                             return {
-                                sequence: m.sequence.toString(),
                                 postback_id: m.postback_id,
                                 event_name: m.event_name,
                                 user_id: m.user_id,
@@ -115,14 +114,13 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public getItemsOnStarted(limit: number, delay: number): Promise<IProcessedPostBackData[]> {
-        return new Promise<IProcessedPostBackData[]>(async (resolve, reject) => {
+    public getItemsOnStarted(limit: number, delay: number): Promise<IPostBackData[]> {
+        return new Promise<IPostBackData[]>(async (resolve, reject) => {
             this.queryForMapper("postback", "getItemOnStarted", { limit, delay })
                 .then((result) => {
                     return resolve(
                         result.rows.map((m) => {
                             return {
-                                sequence: m.sequence.toString(),
                                 postback_id: m.postback_id,
                                 event_name: m.event_name,
                                 user_id: m.user_id,
@@ -144,10 +142,10 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public updateItem(data: IProcessedPostBackData): Promise<void> {
+    public updateItem(data: IPostBackData): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             this.queryForMapper("postback", "updateItem", {
-                sequence: data.sequence,
+                postback_id: data.postback_id,
                 status: data.status,
             })
                 .then(() => {
@@ -160,10 +158,10 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public updateItemTxHash(data: IProcessedPostBackData): Promise<void> {
+    public updateItemTxHash(data: IPostBackData): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             this.queryForMapper("postback", "updateItemTxHash", {
-                sequence: data.sequence,
+                postback_id: data.postback_id,
                 status: data.status,
                 tx_hash: data.tx_hash,
             })
@@ -177,10 +175,10 @@ export class PostBackStorage extends Storage {
         });
     }
 
-    public removeItem(sequence: string): Promise<void> {
+    public removeItem(postback_id: string): Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             this.queryForMapper("postback", "removeItem", {
-                sequence,
+                postback_id,
             })
                 .then(() => {
                     return resolve();
