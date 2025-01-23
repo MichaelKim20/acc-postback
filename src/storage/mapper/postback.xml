@@ -12,7 +12,7 @@
             "payout"            ,
             "user_payout"       ,
             "user_payout_in_vc" ,
-            "publisher"         ,
+            "provider"          ,
             "status"            ,
             "timestamp"
         )
@@ -25,7 +25,7 @@
             ${payout}               ,
             ${user_payout}          ,
             ${user_payout_in_vc}    ,
-            #{publisher}            ,
+            #{provider}             ,
             #{status}               ,
             now()
         )

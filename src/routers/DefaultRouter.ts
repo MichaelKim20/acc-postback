@@ -38,7 +38,7 @@ export class DefaultRouter {
                 query("payout").exists(),
                 query("user_payout").exists(),
                 query("user_payout_in_vc").exists(),
-                query("publisher").exists(),
+                query("provider").exists().trim().isEthereumAddress(),
             ],
             this.handler_address.bind(this)
         );
@@ -51,7 +51,7 @@ export class DefaultRouter {
                 query("payout").exists(),
                 query("user_payout").exists(),
                 query("user_payout_in_vc").exists(),
-                query("publisher").exists(),
+                query("provider").exists().trim().isEthereumAddress(),
             ],
             this.handler_address.bind(this)
         );
@@ -64,7 +64,7 @@ export class DefaultRouter {
                 query("payout").exists(),
                 query("user_payout").exists(),
                 query("user_payout_in_vc").exists(),
-                query("publisher").exists(),
+                query("provider").exists().trim().isEthereumAddress(),
             ],
             this.handler_phone.bind(this)
         );
@@ -118,7 +118,7 @@ export class DefaultRouter {
             const payout: number = Number(req.query.payout);
             const user_payout: number = Number(req.query.user_payout);
             const user_payout_in_vc: number = Number(req.query.user_payout_in_vc);
-            const publisher: string = String(req.query.publisher).trim();
+            const provider: string = String(req.query.provider).trim();
 
             await this._storage.saveItem(
                 postback_id,
@@ -128,7 +128,7 @@ export class DefaultRouter {
                 payout,
                 user_payout,
                 user_payout_in_vc,
-                publisher
+                provider
             );
             return res.status(200).json({
                 status: "success",
@@ -181,7 +181,7 @@ export class DefaultRouter {
             const payout: number = Number(req.query.payout);
             const user_payout: number = Number(req.query.user_payout);
             const user_payout_in_vc: number = Number(req.query.user_payout_in_vc);
-            const publisher: string = String(req.query.publisher).trim();
+            const provider: string = String(req.query.provider).trim();
 
             if (user_id.substring(0, 1) !== "+") user_id = "+" + user_id;
             const phoneUtil = PhoneNumberUtil.getInstance();
@@ -206,7 +206,7 @@ export class DefaultRouter {
                 payout,
                 user_payout,
                 user_payout_in_vc,
-                publisher
+                provider
             );
             return res.status(200).json({
                 status: "success",

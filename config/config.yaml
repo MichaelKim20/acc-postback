@@ -17,7 +17,6 @@ logging:
 
 setting:
   accessKey: ${ACCESS_KEY}
-  provider: ${PROVIDER_ADDRESS}
   agent: ${AGENT_PK}
   network: ${NETWORK}
   delaySecond: ${DELAY_SECOND}
@@ -27,8 +26,6 @@ setting:
 
 provision:
   items:
-    - publisher: ACCSoft
-      provider: ${PROVIDER_ADDRESS}
 
 scheduler:
   enable: true

@@ -12,9 +12,6 @@ import { ethers } from "ethers";
 export class PostBackScheduler extends Scheduler {
     private _config: Config | undefined;
     private _storage: PostBackStorage | undefined;
-    private _metrics: Metrics | undefined;
-
-    private _client: ProviderClient | undefined;
     private _provider: ethers.providers.JsonRpcProvider | undefined;
 
     constructor(expression: string) {
@@ -29,15 +26,7 @@ export class PostBackScheduler extends Scheduler {
         }
     }
 
-    private get metrics(): Metrics {
-        if (this._metrics !== undefined) return this._metrics;
-        else {
-            logger.error("Metrics is not ready yet.");
-            process.exit(1);
-        }
-    }
-
-    private get provider(): ethers.providers.JsonRpcProvider {
+    private get web3Provider(): ethers.providers.JsonRpcProvider {
         if (this._provider === undefined)
             this._provider = new ethers.providers.JsonRpcProvider(this.config.setting.rpcEndpoint);
         return this._provider;
@@ -51,20 +40,10 @@ export class PostBackScheduler extends Scheduler {
         }
     }
 
-    private get client(): ProviderClient {
-        if (this._client === undefined) {
-            const network =
-                this.config.setting.network === "testnet" ? 0 : this.config.setting.network === "mainnet" ? 1 : 2;
-            this._client = new ProviderClient(network, this.config.setting.agent);
-        }
-        return this._client;
-    }
-
     public setOption(options: any) {
         if (options) {
             if (options.config && options.config instanceof Config) this._config = options.config;
             if (options.storage && options.storage instanceof PostBackStorage) this._storage = options.storage;
-            if (options.metrics && options.metrics instanceof Metrics) this._metrics = options.metrics;
         }
     }
 
@@ -87,40 +66,37 @@ export class PostBackScheduler extends Scheduler {
         );
         for (const item of list) {
             if (item.user_payout > 0) {
-                const provisionItem = this.config.provision.getProvision(item.publisher);
-                if (provisionItem !== undefined) {
-                    try {
-                        const amount = BOACoin.make(item.user_payout_in_vc).value;
-                        logger.info(
-                            `Send: user_id: ${item.user_id}, point: ${new BOACoin(
-                                amount
-                            ).toBOAString()}, user_payout_in_vc: ${item.user_payout_in_vc}, user_payout: ${
-                                item.user_payout
-                            }, payout: ${item.payout}, publisher: ${item.publisher}`
-                        );
+                const provisionItem = this.config.provision.getProvision(item.provider);
+                const agent = provisionItem !== undefined ? provisionItem.agent : this.config.setting.agent;
 
-                        if (item.user_id_type === 0) {
-                            item.tx_hash = await this.client.provideToAddress(
-                                provisionItem.provider,
-                                item.user_id,
-                                amount
-                            );
-                        } else {
-                            item.tx_hash = await this.client.provideToPhone(
-                                provisionItem.provider,
-                                item.user_id,
-                                amount
-                            );
-                        }
-                        await this.provider.waitForTransaction(item.tx_hash, undefined, 1_000);
-                        item.status = ProvisionStatus.Sent;
-                        await this.storage.updateItemTxHash(item);
-                    } catch (error) {
-                        logger.error(`Failed to send point: ${error}`);
+                try {
+                    const amount = BOACoin.make(item.user_payout_in_vc).value;
+                    logger.info(
+                        `Send: user_id: ${item.user_id}, point: ${new BOACoin(
+                            amount
+                        ).toBOAString()}, user_payout_in_vc: ${item.user_payout_in_vc}, user_payout: ${
+                            item.user_payout
+                        }, payout: ${item.payout}, provider: ${item.provider}`
+                    );
+
+                    const network =
+                        this.config.setting.network === "testnet"
+                            ? 0
+                            : this.config.setting.network === "mainnet"
+                            ? 1
+                            : 2;
+                    const providerClient = new ProviderClient(network, agent);
+                    if (item.user_id_type === 0) {
+                        item.tx_hash = await providerClient.provideToAddress(item.provider, item.user_id, amount);
+                    } else {
+                        item.tx_hash = await providerClient.provideToPhone(item.provider, item.user_id, amount);
                     }
-                } else {
-                    item.status = ProvisionStatus.Pass;
-                    await this.storage.updateItem(item);
+                    await this.web3Provider.waitForTransaction(item.tx_hash, undefined, 1_000);
+
+                    item.status = ProvisionStatus.Sent;
+                    await this.storage.updateItemTxHash(item);
+                } catch (error) {
+                    logger.error(`Failed to send point: ${error}`);
                 }
             } else {
                 item.status = ProvisionStatus.Pass;

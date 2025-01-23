@@ -217,7 +217,7 @@ export class SchedulerConfig implements ISchedulerConfig {
         this.items = [];
         if (config === undefined) return;
         if (config.enable !== undefined) this.enable = config.enable.toString().toLowerCase() === "true";
-        if (config.items !== undefined) this.items = config.items;
+        if (config.items !== undefined && config.items !== null) this.items = config.items;
     }
 
     public getScheduler(name: string): ISchedulerItemConfig | undefined {
@@ -227,7 +227,6 @@ export class SchedulerConfig implements ISchedulerConfig {
 
 export class Setting implements ISetting {
     public accessKey: string;
-    public provider: string;
     public agent: string;
     public network: string;
     public delaySecond: number;
@@ -238,7 +237,6 @@ export class Setting implements ISetting {
     constructor() {
         const defaults = Setting.defaultValue();
         this.accessKey = defaults.accessKey;
-        this.provider = defaults.provider;
         this.agent = defaults.agent;
         this.network = defaults.network;
         this.delaySecond = defaults.delaySecond;
@@ -249,7 +247,6 @@ export class Setting implements ISetting {
 
     public readFromObject(config: ISetting) {
         if (config.accessKey !== undefined) this.accessKey = config.accessKey;
-        if (config.provider !== undefined) this.provider = config.provider;
         if (config.agent !== undefined) this.agent = config.agent;
         if (config.network !== undefined) this.network = config.network;
         if (config.delaySecond !== undefined) this.delaySecond = Number(config.delaySecond);
@@ -276,24 +273,18 @@ export class ProvisionConfig implements IProvisionConfig {
     public items: IProvisionItem[];
 
     constructor() {
-        const defaults = ProvisionConfig.defaultValue();
-        this.items = defaults.items;
-    }
-
-    public static defaultValue(): IProvisionConfig {
-        return {
-            items: [],
-        } as unknown as IProvisionConfig;
+        this.items = [];
     }
 
     public readFromObject(config: IProvisionConfig) {
         this.items = [];
         if (config === undefined) return;
-        if (config.items !== undefined) this.items = config.items;
+        if (config.items !== undefined && config.items !== null) this.items = config.items;
+        else this.items = [];
     }
 
-    public getProvision(publisher: string): IProvisionItem | undefined {
-        return this.items.find((m) => m.publisher === publisher);
+    public getProvision(provider: string): IProvisionItem | undefined {
+        return this.items.find((m) => m.provider === provider);
     }
 }
 
@@ -339,7 +330,6 @@ export interface IConfig {
 
 export interface ISetting {
     accessKey: string;
-    provider: string;
     agent: string;
     network: string;
     delaySecond: number;
@@ -354,6 +344,6 @@ export interface IProvisionConfig {
 }
 
 export interface IProvisionItem {
-    publisher: string;
     provider: string;
+    agent: string;
 }
