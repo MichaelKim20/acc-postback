@@ -37,7 +37,7 @@ export class DefaultRouter {
                 query("user_id").exists().trim().isEthereumAddress(),
                 query("payout").exists(),
                 query("user_payout").exists(),
-                query("user_payout_in_vc").exists(),
+                query("user_payout_in_vc").exists().isFloat({ min: 1, max: 50 }),
                 query("provider").exists().trim().isEthereumAddress(),
             ],
             this.handler_address.bind(this)
@@ -50,7 +50,7 @@ export class DefaultRouter {
                 query("user_id").exists().trim().isEthereumAddress(),
                 query("payout").exists(),
                 query("user_payout").exists(),
-                query("user_payout_in_vc").exists(),
+                query("user_payout_in_vc").exists().isFloat({ min: 1, max: 50 }),
                 query("provider").exists().trim().isEthereumAddress(),
             ],
             this.handler_address.bind(this)
@@ -63,7 +63,7 @@ export class DefaultRouter {
                 query("user_id").exists().trim().matches("^\\+?[0-9]+([ -][0-9]+)*$"),
                 query("payout").exists(),
                 query("user_payout").exists(),
-                query("user_payout_in_vc").exists(),
+                query("user_payout_in_vc").exists().isFloat({ min: 1, max: 50 }),
                 query("provider").exists().trim().isEthereumAddress(),
             ],
             this.handler_phone.bind(this)
