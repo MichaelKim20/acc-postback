@@ -3,4 +3,4 @@
 TAG_NANE="$(git rev-parse --short=12 HEAD)"
 echo "TAG_NANE=$TAG_NANE"
 
-docker build -t bosagora/acc-postback:"$TAG_NANE" -f Dockerfile --push .
+docker build -t bosagora/kios-postback:"$TAG_NANE" -f Dockerfile --push .
